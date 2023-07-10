@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import { Box, Title } from "@mantine/core"
 import useUser from "./login/hooks/useUser"
@@ -23,7 +22,7 @@ export default function Home() {
         .then((res) => console.log(res))
         .catch((err) => console.log(err))
     }
-  }, [])
+  }, [accessToken])
 
   if (!accessToken || !username) return <main>Loading...</main>
   return (
