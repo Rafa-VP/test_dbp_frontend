@@ -1,5 +1,4 @@
 import axios from "axios"
-import { user } from "../constants/user"
 
 export const AuthAPI = axios.create({
   baseURL: "https://test-dbp-backend.vercel.app/auth",
@@ -8,7 +7,7 @@ export const AuthAPI = axios.create({
 
 export const ClientAPI = axios.create({
   baseURL: "https://test-dbp-backend.vercel.app/client",
-  headers: {
+  /* headers: {
     Authorization: `Bearer ${user?.accessToken}`,
-  },
+  }, */
 })

@@ -19,7 +19,7 @@ export default function Home() {
 
   useEffect(() => {
     if (accessToken) {
-      findAll()
+      findAll(accessToken)
         .then((res) => console.log(res))
         .catch((err) => console.log(err))
     }
