@@ -7,8 +7,8 @@ import {
   Grid,
   PasswordInput,
 } from "@mantine/core"
-import { useLoginForm } from "./hooks/useLoginForm"
-import "./login.css"
+import { useAuthForm } from "./hooks/useAuthForm"
+import "./auth.css"
 import {
   IconEyeCheck,
   IconEyeOff,
@@ -17,9 +17,9 @@ import {
 } from "@tabler/icons-react"
 import { Loader } from "@mantine/core"
 
-export default function Login() {
+export default function Auth() {
   const { isLoading, passwordProps, usernameProps, onSubmit } =
-    useLoginForm()
+    useAuthForm()
 
   return (
     <Box maw={396} mx="auto" my="4rem">

@@ -40,10 +40,10 @@ export default function useUser() {
         )
         if (decodedJwt.exp * 1000 < Date.now()) {
           window.localStorage.removeItem("user")
-          router.push("/login")
+          router.push("/auth")
         }
       } else {
-        router.push("/login")
+        router.push("/auth")
       }
     }, 60 * 1000)
 

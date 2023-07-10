@@ -1,10 +1,10 @@
 "use client"
-import { signIn } from "@/app/services/auth/logIn"
 import { useForm } from "@mantine/form"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { signIn } from "../service/auth-service"
 
-export const useLoginForm = () => {
+export const useAuthForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const router = useRouter()
   const form = useForm({
