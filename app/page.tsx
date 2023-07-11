@@ -137,7 +137,7 @@ export default function Home() {
       <Grid justify="center" align="center" mt={30} mb={20}>
         <Grid.Col span={12}>
           <Title align="center" color="indigo" order={1}>
-            Laboratorio RVP
+            RVP Laboratory
           </Title>
         </Grid.Col>
         <Grid.Col span={10}>

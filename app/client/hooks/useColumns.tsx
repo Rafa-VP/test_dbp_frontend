@@ -72,7 +72,7 @@ export const useColumns = ({
       name: "",
       label: "ACTIONS",
       options: {
-        customBodyRender: (value, tableMeta) => (
+        customBodyRender: (_value, tableMeta) => (
           <Flex
             justify="center"
             align="center"

@@ -24,7 +24,7 @@ export default function Auth() {
   return (
     <Box maw={396} mx="auto" my="4rem">
       <Title align="center" color="indigo" order={1}>
-        Laboratorio
+        RVP Laboratory
       </Title>
       <form autoComplete="off" onSubmit={onSubmit}>
         <Grid
