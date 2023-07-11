@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { IClient } from "@/app/interfaces/interfaces"
 
 export interface IValues extends IClient {
@@ -11,10 +12,10 @@ export interface IValues extends IClient {
 }
 
 export interface IClientValidation {
-  ci: () => string | null
-  firstName: () => string | null
-  lastName: () => string | null
-  oxygenPercent: () => string | null
-  fatPercent: () => string | null
-  sugarPercent: () => string | null
+  ci: (value: string) => string | null
+  firstName: (value: string) => string | null
+  lastName: (value: string) => string | null
+  oxygenPercent: (value: number) => string | null
+  fatPercent: (value: number) => string | null
+  sugarPercent: (value: number) => string | null
 }
