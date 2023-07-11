@@ -1,32 +1,25 @@
 "use client"
 import { useForm } from "@mantine/form"
-import { useState } from "react"
 import { create, update } from "../service/client-service"
-import { IClient, IUser } from "@/app/interfaces/interfaces"
+import { IUser } from "@/app/interfaces/interfaces"
+import { IValues } from "../interfaces/client-interfaces"
+import { clientValidation } from "../validations/client-validation"
+import { useMutation } from "react-query"
+import { queryClient } from "@/app/layout"
+import { Dispatch, SetStateAction } from "react"
 
-interface IValues extends IClient {
-  action?: string
-  ci: string
-  firstName: string
-  lastName: string
-  oxygenPercent: number
-  fatPercent: number
-  sugarPercent: number
-}
-
-function isNumeric(value: string) {
-  return /^-?\d+$/.test(value)
-}
-
-export const useClientForm = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+export const useClientForm = (
+  setMutationsInCache: Dispatch<SetStateAction<number>>
+) => {
+  /* ||=========== GETTING USER INFORMATION FROM LOCAL STORAGE ========|| */
   let user: IUser
-  let accessToken: string
+  let accessToken: string = ""
   if (typeof window !== "undefined") {
     let userItem = localStorage.getItem("user") || "{}"
     user = JSON.parse(userItem)
     accessToken = user.accessToken
   }
+  /* ||=============== FORM HOOK ===================|| */
   const form = useForm<IValues>({
     initialValues: {
       action: "",
@@ -37,69 +30,48 @@ export const useClientForm = () => {
       fatPercent: undefined as any,
       sugarPercent: undefined as any,
     },
-    validate: {
-      ci: (value: string) =>
-        !isNumeric(value)
-          ? "C.I must be a number string"
-          : value.length !== 10
-          ? "C.I must have 10 numbers"
-          : null,
-      firstName: (value: string) =>
-        value.length < 1
-          ? "First Name must have at least 1 letter"
-          : null,
-      lastName: (value: string) =>
-        value.length < 3
-          ? "First Name must have at least 3 letter"
-          : null,
-      oxygenPercent: (value: number) =>
-        value === undefined
-          ? "Oxygen Percent is required"
-          : value < 0
-          ? "Oxygen Percent must be between 0 and 100"
-          : value > 100
-          ? "Oxygen Percent must be between 0 and 100"
-          : null,
-      fatPercent: (value: number) =>
-        value === undefined
-          ? "Fat Percent is required"
-          : value < 0
-          ? "Fat Percent must be between 0 and 100"
-          : value > 100
-          ? "Fat Percent must be between 0 and 100"
-          : null,
-      sugarPercent: (value: number) =>
-        value === undefined
-          ? "Sugar Percent is required"
-          : value < 0
-          ? "Sugar Percent must be between 0 and 100"
-          : value > 100
-          ? "Sugar Percent must be between 0 and 100"
-          : null,
-    },
+    validate: clientValidation,
   })
 
+  /* ||================= REACT QUERY MUTATIONS ===================|| */
+  const createMutation = useMutation({
+    mutationKey: "create-mutation",
+    mutationFn: async () =>
+      await create({ client: form.values, accessToken }),
+    onSuccess: () => {
+      queryClient.invalidateQueries("clients-data")
+      setMutationsInCache((prev) => prev + 1)
+    },
+    onError: () => setMutationsInCache((prev) => prev + 1),
+  })
+  const updateMutation = useMutation({
+    mutationKey: "update-mutation",
+    mutationFn: async () =>
+      await update({
+        _id: form.values._id as string,
+        client: form.values,
+        accessToken: accessToken,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries("clients-data")
+      setMutationsInCache((prev) => prev + 1)
+    },
+    onError: (err: any) => console.log(err.response.data),
+  })
+
+  /* ||============== FORM PROPS =============|| */
   const onSubmit = form.onSubmit(async (values) => {
     switch (values.action) {
       case "CREATE":
-        setIsLoading(true)
-        delete values["action"]
-        create({ client: values, accessToken })
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err))
-          .finally(() => setIsLoading((prev) => !prev))
+        try {
+          await createMutation.mutateAsync()
+        } catch (err) {}
+
         break
       case "UPDATE":
-        setIsLoading(true)
-        delete values["action"]
-        update({
-          _id: values._id as string,
-          client: values,
-          accessToken: accessToken,
-        })
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err))
-          .finally(() => setIsLoading((prev) => !prev))
+        try {
+          await updateMutation.mutateAsync()
+        } catch (err) {}
         break
       default:
     }
@@ -129,7 +101,9 @@ export const useClientForm = () => {
   const reset = form.reset
 
   return {
-    isLoading,
+    isLoadingMutation: [createMutation, updateMutation].some(
+      (q) => q.isLoading
+    ),
     props,
     onSubmit,
     setFieldValue,

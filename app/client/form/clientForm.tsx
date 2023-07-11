@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Button,
   Grid,
+  Loader,
   NumberInput,
   TextInput,
   Title,
@@ -13,14 +14,14 @@ export default function ClientForm({
   onSubmit,
   setFieldValue,
   values,
-  isLoading,
   reset,
+  isLoadingMutation,
 }: {
   props: any
   onSubmit: any
   setFieldValue: any
   values: any
-  isLoading: boolean
+  isLoadingMutation: boolean
   reset: any
 }) {
   return (
@@ -63,6 +64,7 @@ export default function ClientForm({
           <Grid justify="center" align="center" p={0}>
             <Grid.Col xs={6} md={4} lg={2}>
               <TextInput
+                disabled={values._id !== undefined}
                 placeholder="CI"
                 type="text"
                 size="sm"
@@ -127,24 +129,36 @@ export default function ClientForm({
 
             <Grid.Col xs={6} md={4} lg={2}>
               <Button
-                disabled={values._id !== undefined}
+                disabled={
+                  values._id !== undefined || isLoadingMutation
+                }
                 fullWidth
                 color="green"
                 type="submit"
                 size="sm"
                 onClick={() => setFieldValue("action", "CREATE")}
+                leftIcon={
+                  isLoadingMutation &&
+                  values._id === undefined && <Loader size={20} />
+                }
               >
                 Create
               </Button>
             </Grid.Col>
             <Grid.Col xs={6} md={4} lg={2}>
               <Button
-                disabled={values._id === undefined}
+                disabled={
+                  values._id === undefined || isLoadingMutation
+                }
                 fullWidth
                 color="indigo"
                 type="submit"
                 size="sm"
                 onClick={() => setFieldValue("action", "UPDATE")}
+                leftIcon={
+                  isLoadingMutation &&
+                  values._id !== undefined && <Loader size={20} />
+                }
               >
                 Update
               </Button>

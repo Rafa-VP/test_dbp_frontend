@@ -1,6 +1,6 @@
 import { ClientAPI } from "@/app/instances/axios-instance"
-import { IClient, IUser } from "@/app/interfaces/interfaces"
-import axios, { AxiosError } from "axios"
+import { IClient } from "@/app/interfaces/interfaces"
+import { AxiosError } from "axios"
 
 export const create = async ({
   client,
@@ -8,7 +8,7 @@ export const create = async ({
 }: {
   client: IClient
   accessToken: string
-}) => {
+}): Promise<any> => {
   try {
     const response = await ClientAPI.post("/", client, {
       headers: {
@@ -42,7 +42,7 @@ export const deleteOne = async ({
 }: {
   _id: string
   accessToken: string
-}) => {
+}): Promise<any> => {
   try {
     const response = await ClientAPI.delete(`/${_id}`, {
       headers: {
@@ -63,7 +63,7 @@ export const update = async ({
   _id: string
   accessToken: string
   client: IClient
-}) => {
+}): Promise<any> => {
   try {
     const response = await ClientAPI.put(`/${_id}`, client, {
       headers: {

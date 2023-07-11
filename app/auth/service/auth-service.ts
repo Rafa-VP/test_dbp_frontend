@@ -1,5 +1,5 @@
 import { AuthAPI } from "@/app/instances/axios-instance"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 
 export const signIn = async ({
   username,
